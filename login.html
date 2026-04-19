@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login Form – ANICADE TECH</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&family=Rajdhani:wght@300;400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --teal:   #00e5ff;
+      --gold:   #ffd54f;
+      --storm:  #0d1f2d;
+      --glass:  rgba(255,255,255,0.06);
+      --border: rgba(0,229,255,0.25);
+    }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Rajdhani', sans-serif;
+      background: var(--storm);
+      overflow: hidden;
+    }
+
+    /* ── Animated forest background ── */
+    .bg {
+      position: fixed; inset: 0; z-index: 0;
+      background:
+        radial-gradient(ellipse at 20% 80%, rgba(0,60,40,0.7) 0%, transparent 60%),
+        radial-gradient(ellipse at 80% 20%, rgba(0,40,60,0.7) 0%, transparent 60%),
+        radial-gradient(ellipse at 50% 50%, rgba(10,30,20,0.9) 0%, transparent 100%);
+      background-color: #061410;
+    }
+    .bg::after {
+      content: '';
+      position: absolute; inset: 0;
+      background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='400' height='400' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+      opacity: 0.4;
+    }
+
+    /* ── Card ── */
+    .card {
+      position: relative; z-index: 10;
+      width: 370px;
+      padding: 42px 36px 36px;
+      background: rgba(8, 28, 22, 0.72);
+      backdrop-filter: blur(18px);
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      box-shadow: 0 0 60px rgba(0,229,255,0.06), 0 20px 60px rgba(0,0,0,0.6);
+    }
+
+    /* ── SVG lightning border (canvas overlay) ── */
+    .lightning-canvas {
+      position: absolute;
+      inset: -2px;
+      width: calc(100% + 4px);
+      height: calc(100% + 4px);
+      border-radius: 18px;
+      pointer-events: none;
+      z-index: 20;
+      overflow: visible;
+    }
+
+    /* ── Title ── */
+    .title {
+      font-family: 'Cinzel', serif;
+      font-size: 1.65rem;
+      font-weight: 600;
+      text-align: center;
+      color: #fff;
+      letter-spacing: 0.04em;
+      margin-bottom: 30px;
+      text-shadow: 0 0 20px rgba(0,229,255,0.4);
+    }
+
+    /* ── Form groups ── */
+    .field { margin-bottom: 22px; }
+    .field label {
+      display: block;
+      font-size: 0.82rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.6);
+      margin-bottom: 7px;
+    }
+    .field input {
+      width: 100%;
+      padding: 11px 14px;
+      background: rgba(0,229,255,0.05);
+      border: 1px solid rgba(0,229,255,0.2);
+      border-radius: 8px;
+      color: #e0f7fa;
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 0.98rem;
+      outline: none;
+      transition: border-color 0.25s, box-shadow 0.25s, background 0.25s;
+    }
+    .field input::placeholder { color: rgba(255,255,255,0.25); }
+    .field input:focus, .field input:hover {
+      border-color: var(--teal);
+      background: rgba(0,229,255,0.09);
+      box-shadow: 0 0 14px rgba(0,229,255,0.18);
+    }
+
+    /* ── Button ── */
+    .btn-login {
+      width: 100%;
+      padding: 13px;
+      margin-top: 6px;
+      background: linear-gradient(135deg, #00b8d4 0%, #006064 100%);
+      border: none;
+      border-radius: 8px;
+      color: #fff;
+      font-family: 'Cinzel', serif;
+      font-size: 1rem;
+      letter-spacing: 0.1em;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+      transition: box-shadow 0.3s, transform 0.15s;
+    }
+    .btn-login:hover {
+      box-shadow: 0 0 30px rgba(0,229,255,0.45);
+      transform: translateY(-1px);
+    }
+    .btn-login::after {
+      content: '';
+      position: absolute; inset: 0;
+      background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.12) 50%, transparent 100%);
+      transform: translateX(-100%);
+      transition: transform 0.5s;
+    }
+    .btn-login:hover::after { transform: translateX(100%); }
+
+    /* ── Social ── */
+    .social-text {
+      text-align: center;
+      font-size: 0.78rem;
+      color: rgba(255,255,255,0.35);
+      margin: 18px 0 12px;
+      letter-spacing: 0.06em;
+    }
+    .social-icons {
+      display: flex; gap: 14px; justify-content: center;
+    }
+    .social-icon {
+      width: 40px; height: 40px;
+      border-radius: 50%;
+      border: 1px solid rgba(0,229,255,0.3);
+      background: rgba(0,229,255,0.06);
+      color: rgba(255,255,255,0.6);
+      font-size: 1rem;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer;
+      transition: border-color 0.2s, color 0.2s, box-shadow 0.2s, transform 0.15s;
+    }
+    .social-icon:hover {
+      border-color: var(--teal);
+      color: var(--teal);
+      box-shadow: 0 0 12px rgba(0,229,255,0.3);
+      transform: scale(1.1);
+    }
+
+    /* ── Watermark ── */
+    .watermark {
+      position: fixed; bottom: 20px; right: 24px;
+      z-index: 100;
+      opacity: 0.55;
+      filter: drop-shadow(0 0 6px rgba(0,229,255,0.4));
+      transition: opacity 0.3s;
+    }
+    .watermark:hover { opacity: 0.9; }
+    .watermark img { height: 40px; display: block; }
+  </style>
+</head>
+<body>
+
+<div class="bg"></div>
+
+<div class="card" id="card">
+  <!-- SVG canvas for lightning -->
+  <svg class="lightning-canvas" id="lightningCanvas" viewBox="0 0 374 504" preserveAspectRatio="none">
+    <defs>
+      <filter id="glow">
+        <feGaussianBlur stdDeviation="2.5" result="coloredBlur"/>
+        <feMerge><feMergeNode in="coloredBlur"/><feMergeNode in="SourceGraphic"/></feMerge>
+      </filter>
+      <filter id="glowStrong">
+        <feGaussianBlur stdDeviation="4" result="coloredBlur"/>
+        <feMerge><feMergeNode in="coloredBlur"/><feMergeNode in="SourceGraphic"/></feMerge>
+      </filter>
+    </defs>
+    <!-- Lightning lines drawn by JS -->
+  </svg>
+
+  <h2 class="title">Login Here</h2>
+
+  <div class="field">
+    <label for="username">Username</label>
+    <input type="text" id="username" placeholder="Email or Phone" autocomplete="off">
+  </div>
+
+  <div class="field">
+    <label for="password">Password</label>
+    <input type="password" id="password" placeholder="Password">
+  </div>
+
+  <button class="btn-login">Log In</button>
+
+  <p class="social-text">Login with a social media account</p>
+  <div class="social-icons">
+    <button class="social-icon fb"><i class="fa-brands fa-facebook"></i></button>
+    <button class="social-icon tw"><i class="fa-brands fa-twitter"></i></button>
+    <button class="social-icon in"><i class="fa-brands fa-instagram"></i></button>
+  </div>
+</div>
+
+<!-- Watermark -->
+<div class="watermark">
+  <img src="https://i.imgur.com/RcBmjWM.png" alt="ANICADE TECH Logo">
+</div>
+
+<script>
+(() => {
+  const svg   = document.getElementById('lightningCanvas');
+  const card  = document.getElementById('card');
+  const inputs = document.querySelectorAll('input');
+
+  let active   = false;   // is lightning running?
+  let intensity = 0;      // 0-1 brightness
+  let animFrame = null;
+  let bolts     = [];
+
+  /* ── Perimeter path helpers ── */
+  // Card inner size ~ 370 x 500 (padding-box). SVG viewBox 374x504
+  const W = 374, H = 504, R = 18;  // match viewBox & border-radius
+
+  // Returns a point on the rounded-rect perimeter given t ∈ [0,1)
+  function perimPoint(t) {
+    // Approximate perimeter: straights + quarter-circles
+    const straightX = W - 2*R;
+    const straightY = H - 2*R;
+    const arc       = Math.PI/2 * R;
+    const total     = 2*(straightX + straightY) + 2*Math.PI*R;
+    let d           = t * total;
+
+    // top edge (left to right)
+    if (d < straightX) return {x: R + d, y: 0};
+    d -= straightX;
+    // top-right arc
+    if (d < arc) { const a = -Math.PI/2 + d/R; return {x: W-R+Math.cos(a)*R, y: R+Math.sin(a)*R}; }
+    d -= arc;
+    // right edge
+    if (d < straightY) return {x: W, y: R + d};
+    d -= straightY;
+    // bottom-right arc
+    if (d < arc) { const a = d/R; return {x: W-R+Math.cos(a)*R, y: H-R+Math.sin(a)*R}; }
+    d -= arc;
+    // bottom edge (right to left)
+    if (d < straightX) return {x: W-R-d, y: H};
+    d -= straightX;
+    // bottom-left arc
+    if (d < arc) { const a = Math.PI/2 + d/R; return {x: R+Math.cos(a)*R, y: H-R+Math.sin(a)*R}; }
+    d -= arc;
+    // left edge
+    if (d < straightY) return {x: 0, y: H-R-d};
+    d -= straightY;
+    // top-left arc
+    const a = Math.PI + d/R;
+    return {x: R+Math.cos(a)*R, y: R+Math.sin(a)*R};
+  }
+
+  /* ── Generate one lightning bolt along the perimeter ── */
+  function makeBolt(speed = 0.002 + Math.random()*0.003) {
+    const start = Math.random();
+    const len   = 0.08 + Math.random()*0.18;  // fraction of perimeter
+    const segs  = 12 + Math.floor(Math.random()*10);
+    const jag   = 4 + Math.random()*7;
+    const color = Math.random() < 0.7 ? '#00e5ff' : '#ffd54f';
+    return { start, len, segs, jag, color, speed,
+             progress: 0, life: 0,
+             maxLife: 0.4 + Math.random()*0.5 };
+  }
+
+  /* ── Draw a bolt ── */
+  function drawBolt(bolt) {
+    const pts = [];
+    const drawn = bolt.len * Math.min(bolt.progress / 0.35, 1);
+    for (let i = 0; i <= bolt.segs; i++) {
+      const t = (bolt.start + drawn * (i / bolt.segs)) % 1;
+      const p = perimPoint(t);
+      const offset = (i === 0 || i === bolt.segs) ? 0 :
+                     (Math.random()-0.5) * bolt.jag * 2;
+      // perpendicular push: approximate normal as perpendicular to tangent
+      const t2 = (t + 0.001) % 1;
+      const p2 = perimPoint(t2);
+      const dx = p2.x - p.x, dy = p2.y - p.y;
+      const len = Math.sqrt(dx*dx+dy*dy) || 1;
+      pts.push({ x: p.x + (-dy/len)*offset, y: p.y + (dx/len)*offset });
+    }
+
+    const fade = bolt.life > bolt.maxLife * 0.7
+      ? 1 - (bolt.life - bolt.maxLife*0.7) / (bolt.maxLife*0.3)
+      : bolt.progress < 0.5 ? bolt.progress * 2 : 1;
+
+    const polyline = document.createElementNS('http://www.w3.org/2000/svg','polyline');
+    polyline.setAttribute('points', pts.map(p=>`${p.x},${p.y}`).join(' '));
+    polyline.setAttribute('stroke', bolt.color);
+    polyline.setAttribute('stroke-width', (0.8 + Math.random()*1.2).toFixed(2));
+    polyline.setAttribute('stroke-opacity', (fade * (0.7 + intensity*0.3)).toFixed(2));
+    polyline.setAttribute('fill', 'none');
+    polyline.setAttribute('filter', intensity > 0.5 ? 'url(#glowStrong)' : 'url(#glow)');
+    polyline.setAttribute('stroke-linecap', 'round');
+    svg.appendChild(polyline);
+  }
+
+  /* ── Animation loop ── */
+  function animate() {
+    // clear svg (remove all polylines)
+    while (svg.lastChild && svg.lastChild.tagName === 'polyline') svg.removeChild(svg.lastChild);
+
+    if (!active) { intensity *= 0.92; }
+    else         { intensity = Math.min(1, intensity + 0.04); }
+
+    // spawn new bolts
+    if (intensity > 0.05 && Math.random() < intensity * 0.25) {
+      bolts.push(makeBolt());
+    }
+
+    // update + draw
+    bolts = bolts.filter(b => {
+      b.progress += b.speed * (0.5 + intensity);
+      b.life     += b.speed * (0.5 + intensity);
+      if (b.life > b.maxLife) return false;
+      drawBolt(b);
+      return true;
+    });
+
+    if (intensity > 0.01 || bolts.length > 0) {
+      animFrame = requestAnimationFrame(animate);
+    } else {
+      animFrame = null;
+    }
+  }
+
+  function startLightning() {
+    active = true;
+    if (!animFrame) animFrame = requestAnimationFrame(animate);
+  }
+  function stopLightning() {
+    active = false;
+    if (!animFrame) animFrame = requestAnimationFrame(animate);
+  }
+
+  /* ── Triggers ── */
+  inputs.forEach(inp => {
+    inp.addEventListener('focus',  startLightning);
+    inp.addEventListener('blur',   stopLightning);
+    inp.addEventListener('input',  () => { intensity = Math.min(1, intensity + 0.15); });
+    inp.addEventListener('mouseover', startLightning);
+    inp.addEventListener('mouseout',  () => { if (document.activeElement !== inp) stopLightning(); });
+  });
+
+  card.addEventListener('mouseenter', startLightning);
+  card.addEventListener('mouseleave', () => {
+    if (!document.activeElement || !['username','password'].includes(document.activeElement.id)) {
+      stopLightning();
+    }
+  });
+})();
+</script>
+
+</body>
+</html>
